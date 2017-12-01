@@ -1,13 +1,11 @@
 # neje-laser-upgrades
-How-to's and resources for upgrading NEJE (and similar) desktop USB laser
-engravers to full GRBL compatibility by replacing the electronics.
+How-to's and resources for upgrading the NEJE (also sold under the HICTOP brand, and others) desktop USB laser engraver to full GRBL compatibility by replacing the electronics.
 
 Last updated November, 2017.
 
 TODO:
 
-* post wiring harness diagram
-* post tip120 schematic
+* post power supply harness diagram
 
 ## Full grbl upgrade with Arduino CNC Shield
 
@@ -46,9 +44,49 @@ Used to convert images to laser commands.
 
 #### Wiring diagrams and schematics
 
-TODO post tip120 connection schematic
+##### Connecting PC power supply to Arduino and Shield
 
-TODO post wiring harness schematic
+TODO: make this better, provide pictures and diagrams.
+
+To power the upgrade, I used a power supply designed to run an internal PC
+hard drive, although a full-size PC power supply would work.
+
+The most important part of the power supply is that is can give 5V at several
+amps to power the laser.
+
+The CNC shield electronics can then be powered from 5V as well, but I chose
+to power them from the 12V rail of the power supply. If you choose to do that,
+you will want to adjust the current-limit on the drivers to avoid damaging the
+stepper motors. Details of how to do this are in the video.
+
+##### Connecting laser to power suppy and CNC shield
+
+The `SPNEN` (SPiNdle ENable) pin on the shield cannot power the laser itself, so
+I use a circuit with a transistor to power the laser from the power supply, but
+still allow it to be turned on and off by the CNC shield.
+
+First, you will connect the positive wire of the laser (coloured red on mine) to
+the 5V power line from your power supply. It *MUST* be 5V, any more will damage
+the laser!
+
+Here is the switching circuit I used:
+
+![Laser Trigger schematic](images/laser_trigger_schematic.png "Laser Trigger schematic")
+
+![Laser Trigger breadboard](images/laser_trigger_breadboard.png "Laser Trigger breadboard")
+
+
+This circuit allows the CNC Shield to turn the laser off and on by connecting or
+disconnecting the negative wire. It uses a transistor that is connectedto the `SPNEN` pin on the CNC shield, in a technique known as
+"[low-side switching](https://learn.sparkfun.com/tutorials/transistors/applications-i-switches)".
+
+
+The transistor I used is a TIP120 "Darlington" transistor. It is a very common
+"power transistor" that you can find at any electronics shop (Radio Shack,
+Fry's, etc) and everywhere online. You can use any similar NPN-type power
+transistor (such as the TIP31, etc) as long as it can handle the current. A
+standard 2N3904 transistor can't handle it, and while a 2N2222 *may* be able to
+handle it for lower-powered lasers, I would still recommend using a TIP-series transistor because they are still very inexpensive.
 
 ### Orientation
 
