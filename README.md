@@ -5,7 +5,8 @@ Last updated November, 2017.
 
 TODO:
 
-* post power supply harness diagram
+* post power supply harness diagram.
+* upgrade trigger schematic to use MOSFET instead of TIP120.
 
 ## Full grbl upgrade with Arduino CNC Shield
 
@@ -80,13 +81,17 @@ This circuit allows the CNC Shield to turn the laser off and on by connecting or
 disconnecting the negative wire. It uses a transistor that is connectedto the `SPNEN` pin on the CNC shield, in a technique known as
 "[low-side switching](https://learn.sparkfun.com/tutorials/transistors/applications-i-switches)".
 
-
 The transistor I used is a TIP120 "Darlington" transistor. It is a very common
 "power transistor" that you can find at any electronics shop (Radio Shack,
 Fry's, etc) and everywhere online. You can use any similar NPN-type power
 transistor (such as the TIP31, etc) as long as it can handle the current. A
 standard 2N3904 transistor can't handle it, and while a 2N2222 *may* be able to
 handle it for lower-powered lasers, I would still recommend using a TIP-series transistor because they are still very inexpensive.
+
+**Note**: I should really upgrade the above circuit to use a MOSFET instead
+of a power transistor. It shouldn't be that hard adapt it using
+[the example from this page](http://www.sensitiveresearch.com/elec/DoNotTIP/index.html). It may also
+let us us PWM to control the intensity of the laser.
 
 ### Orientation
 
