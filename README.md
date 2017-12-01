@@ -1,20 +1,19 @@
 # neje-laser-upgrades
 How-to's and resources for upgrading NEJE (and similar) desktop USB laser
-engravers.
+engravers to full GRBL compatibility by replacing the electronics.
 
-Last updated Feb 21, 2017.
+Last updated November, 2017.
 
 TODO:
 
-* post video LINK
-* post Wiring
+* post wiring harness diagram
 * post tip120 schematic
 
 ## Full grbl upgrade with Arduino CNC Shield
 
 ### Video
 
-There is a video of the upgrade process here: TODO ADD VIDEO LINK
+I have uploaded a video of the whole upgrade process at [youtu.be/2rbzI-d-bOA](https://youtu.be/2rbzI-d-bOA).
 
 ### Links to resources
 
@@ -26,7 +25,9 @@ to flash a new version of grbl to it.
 
 #### Hardware
 
-The engraver pictured in the above video: [KKmoon NEJE DK-8-KZ 1000mW](https://www.amazon.com/gp/product/B01EACK7UG/ref=oh_aui_detailpage_o05_s02)
+![NEJE DK-8-KZ Engraver](images/neje_1000w_laser_engraver_small.jpg "NEJE DK-8-KZ Engraver")
+
+The engraver pictured above and in the video: [KKmoon NEJE DK-8-KZ 1000mW](https://www.amazon.com/gp/product/B01EACK7UG/ref=oh_aui_detailpage_o05_s02)
 
 The Arduino shield used to control the steppers: [Arduino CNC Shield](http://blog.protoneer.co.nz/arduino-cnc-shield/).
 I think I mistakenly referred to this as "grblshield" in the video.
@@ -46,6 +47,7 @@ Used to convert images to laser commands.
 #### Wiring diagrams and schematics
 
 TODO post tip120 connection schematic
+
 TODO post wiring harness schematic
 
 ### Orientation
