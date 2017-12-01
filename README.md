@@ -91,7 +91,7 @@ handle it for lower-powered lasers, I would still recommend using a TIP-series t
 **Note**: I should really upgrade the above circuit to use a MOSFET instead
 of a power transistor. It shouldn't be that hard adapt it using
 [the example from this page](http://www.sensitiveresearch.com/elec/DoNotTIP/index.html). It may also
-let us us PWM to control the intensity of the laser.
+let us use PWM to control the intensity of the laser.
 
 ### Orientation
 
