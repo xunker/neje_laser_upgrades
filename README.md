@@ -1,18 +1,17 @@
 # neje-laser-upgrades
-How-to's and resources for upgrading the NEJE (also sold under the HICTOP brand, and others) desktop USB laser engraver to full GRBL compatibility by replacing the electronics.
+How-to's and resources for upgrading the NEJE (also sold under the HICTOP brand, and others) desktop USB laser engraver to full GRBL compatibility by replacing
+the electronics.
 
-Last updated November, 2017.
-
-TODO:
-
-* post power supply harness diagram.
-* upgrade trigger schematic to use MOSFET instead of TIP120.
+Last updated January, 2018.
 
 ## Full grbl upgrade with Arduino CNC Shield
 
-### Video
+### Videos
 
 I have uploaded a video of the whole upgrade process at [youtu.be/2rbzI-d-bOA](https://youtu.be/2rbzI-d-bOA).
+
+A second video with specific focus on the wiring, and that covers use of a
+MOSFET to switch the laser, is also available at [https://youtu.be/MuKYvifYnYs](https://youtu.be/MuKYvifYnYs).
 
 ### Links to resources
 
@@ -35,6 +34,9 @@ I think I mistakenly referred to this as "grblshield" in the video.
 
 [Laser focus adjustment ring](http://www.thingiverse.com/thing:1939313).
 
+[IRF520 module](https://www.amazon.com/gp/product/B00Z8UF6AQ), the board that
+controls power to the 5V laser.
+
 #### Software
 
 [Universal Gcode Sender](https://github.com/winder/Universal-G-Code-Sender) -
@@ -47,10 +49,18 @@ Used to convert images to laser commands.
 
 ##### Connecting PC power supply to Arduino and Shield
 
-TODO: make this better, provide pictures and diagrams.
+The CNC shield can accept any DC voltage from 12V to 36V. Because the stepper
+motors used here are very small, the 12V does not need to be high amperage;
+500ma or larger will probably be sufficient.
+
+![CNC Shield Power schematic](images/CNC%20Shield%20Power.png "CNC Shield Power schematic")
+
+![CNC Shield Connections annotated](images/CNC%20Shield%20Annotated%20resized.JPG "CNC Shield Connections annotated")
 
 To power the upgrade, I used a power supply designed to run an internal PC
 hard drive, although a full-size PC power supply would work.
+
+![PC Power Supply Molex schematic](images/PC%20Power%20Supply%20Connector.png "PC Power Supply Molex schematic")
 
 The most important part of the power supply is that is can give 5V at several
 amps to power the laser.
@@ -60,7 +70,17 @@ to power them from the 12V rail of the power supply. If you choose to do that,
 you will want to adjust the current-limit on the drivers to avoid damaging the
 stepper motors. Details of how to do this are in the video.
 
-##### Connecting laser to power suppy and CNC shield
+##### Connecting stepper motors to the shield
+
+The connector for the stepper motors are between the "drivers" (the red square
+  circuit boards [in this image](images/CNC%20Shield%20Annotated%20resized.JPG).
+
+With the white wire facing up, match the 4-pin connector on the cable to the
+4-pin connector on the board for both the X- and Y-axis.
+
+![Stepper motor connections](images/Stepper%20Motor%20Connectors.png "Stepper motor connections")
+
+##### Connecting laser to power supply and CNC shield
 
 The `SPNEN` (SPiNdle ENable) pin on the shield cannot power the laser itself, so
 I use a circuit with a transistor to power the laser from the power supply, but
@@ -70,16 +90,43 @@ First, you will connect the positive wire of the laser (coloured red on mine) to
 the 5V power line from your power supply. It *MUST* be 5V, any more will damage
 the laser!
 
-Here is the switching circuit I used:
+We will switch the laser on and off by connecting or disconnecting the
+negative/ground wire. This technique is known as "[low-side switching](https://learn.sparkfun.com/tutorials/transistors/applications-i-switches)".
 
-![Laser Trigger schematic](images/laser_trigger_schematic.png "Laser Trigger schematic")
+Here are two ways to do it, though there are probably other ways too. I
+recommend using a MOSFET over a TIP120. But if you only have a TIP120 it will
+still work though your laser power may suffer.
 
-![Laser Trigger breadboard](images/laser_trigger_breadboard.png "Laser Trigger breadboard")
+###### MOSFET circuit
 
+An efficient way to switch the laser on and off is to use an N-Channel Power
+MOSFET. Currently I am using an [IRF520 module like this one](https://www.amazon.com/gp/product/B00Z8UF6AQ), but this is not designed for logic-level switching so if you have the option I would
+recommend using [a logic-level MOSFET](https://www.mouser.com/ProductDetail/512-FQU13N10LTU) instead.
 
-This circuit allows the CNC Shield to turn the laser off and on by connecting or
-disconnecting the negative wire. It uses a transistor that is connectedto the `SPNEN` pin on the CNC shield, in a technique known as
-"[low-side switching](https://learn.sparkfun.com/tutorials/transistors/applications-i-switches)".
+But, regardless of the voltage, if you want to solder one yourself then the
+circuit will look something like this:
+
+![MOSFET Laser Trigger schematic](images/Stock%20Laser%20Power%20and%20Control.png "MOSFET Laser Trigger schematic")
+
+This will switch the laser on and off with a minimum of voltage loss.
+
+If you use the same IRF520 module that I did, here is how the wires are
+connected:
+
+![IRF520 module connections](images/IRF520%20Module%20Annotated%20resized.JPG "IRF520 module connections")
+
+###### TIP120 circuit
+
+Before using the MOSFET, I was using a TIP120 Darlington transistor. This works
+but it is a poor choice because the voltage drop on a TIP120 can be as much as
+2V in some cases. If we were switching 48V then that wouldn't be a problem but
+for a 5V laser, losing even 1V is going to severely impact laser power.
+
+Here is the TIP120 switching circuit I used before:
+
+![TIP120 Laser Trigger schematic](images/laser_trigger_schematic.png "TIP120 Laser Trigger schematic")
+
+![TIP120 Laser Trigger breadboard](images/laser_trigger_breadboard.png "TIP120 Laser Trigger breadboard")
 
 The transistor I used is a TIP120 "Darlington" transistor. It is a very common
 "power transistor" that you can find at any electronics shop (Radio Shack,
